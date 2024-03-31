@@ -30,16 +30,16 @@ def perplexity(text, model, tokenizer, compute_device, sliding=False):
 
 def append_to_file(metric, generated_samples_unique, text, n, file_name):
 
-    file_path = "./internet_text_output/"+file_name+'/'
+    file_path = "./internet_text_output/"+file_name
 
     idxs = np.argsort(metric)[::-1][:n]
 
+    file = open(file_path, 'w')
     i = 1
     for idx in idxs:
-        with open(file_path+str(i)+".txt", 'w') as file:
-            file.write("Value: "+str(metric[idx])+"\n\n\n")
-            file.write(generated_samples_unique[idx])
-        
+        file.write("------->"+str(i)+"Metric("+text+"): "+str(metric[idx])+"\n\n\n")
+        file.write(generated_samples_unique[idx])
+        file.write("\n\n")
         i += 1
 
 def evaluating(generated_samples, model_s, model_m, model_xl, tokenizer, compute_device):
@@ -79,27 +79,27 @@ def evaluating(generated_samples, model_s, model_m, model_xl, tokenizer, compute
     print("Appending to the file...")
     # metric 1 (Perplexity of XL model)
     metric = -np.log(perplexity_values["XL"])
-    append_to_file(metric, generated_samples_unique, "Perplexity of the XL model", 100, "perplexity")
+    append_to_file(metric, generated_samples_unique, "Perplexity of the XL model", 100, "perplexity.txt")
 
     # metric 2 (perplexity of S/perplexity of XL)
     metric = np.log(perplexity_values["S"])/np.log(perplexity_values["XL"])
-    append_to_file(metric, generated_samples, "Perplexity of the S model/Perplexity of XL model", 100, "small")
+    append_to_file(metric, generated_samples, "Perplexity of the S model/Perplexity of XL model", 100, "small.txt")
 
     # metric 3 (perplexity of M/perplexity of XL)
     metric = np.log(perplexity_values["M"])/np.log(perplexity_values["XL"])
-    append_to_file(metric, generated_samples, "Perplexity of the M model/Perplexity of XL model", 100, "medium")
+    append_to_file(metric, generated_samples, "Perplexity of the M model/Perplexity of XL model", 100, "medium.txt")
 
     # metric 4 (perplexity of XL on lower case/perplexity of XL on normal case)
     metric = np.log(perplexity_values["Lower"])/np.log(perplexity_values["XL"])
-    append_to_file(metric, generated_samples, "Perplexity of XL on lower case/Perplexity of XL on normal case", 100, "lower")
+    append_to_file(metric, generated_samples, "Perplexity of XL on lower case/Perplexity of XL on normal case", 100, "lower.txt")
 
     # metric 5 (zlib entropy/perplexity of XL)
     metric = perplexity_values["zlib"]/np.log(perplexity_values["XL"])
-    append_to_file(metric, generated_samples_unique, "zlib entropy/perplexity of XL", 100, "zlib")
+    append_to_file(metric, generated_samples_unique, "zlib entropy/perplexity of XL", 100, "zlib.txt")
 
     # metric 6 (Minimum perplexity over a sliding window of size 50)
     metric = -np.log(perplexity_values["Window"])
-    append_to_file(metric, generated_samples_unique,"Minimum perplexity over a sliding window of size 50", 100, "window")
+    append_to_file(metric, generated_samples_unique,"Minimum perplexity over a sliding window of size 50", 100, "window.txt")
 
 
 def parse_wet_files(file):
@@ -123,6 +123,31 @@ def parse_wet_files(file):
     
     return plain_text
 
+
+def parse_old_wet_files(file):
+
+    with open(file) as f:
+        lines = f.readlines()
+
+    start_idx = []
+    for i in range(len(lines)):
+        if "WARC/1.0" in lines[i]:
+            start_idx.append(i)
+    
+    plain_text = ""
+
+    for i in range(len(start_idx)-1):
+        start = start_idx[i]
+        end = start_idx[i+1]
+        tmp_plain_text = ""
+
+        for j in range(start+10,end):
+            tmp_plain_text += lines[j]
+
+        if(tmp_plain_text.isascii()):
+            plain_text += tmp_plain_text
+    
+    return plain_text
 
 def generate_inputs_internet_text(wet_plain_text, batch_size):
 

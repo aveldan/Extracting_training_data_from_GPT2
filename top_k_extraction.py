@@ -28,16 +28,16 @@ def perplexity(text, model, tokenizer, compute_device, sliding=False):
         return min_perplexity
     
 
-def append_to_file(metric, generated_samples_unique, text, n=10, file_name="extracted_data.txt"):
+def append_to_file(metric, generated_samples_unique, text, n, file_name):
 
-    
-    file = open(file_name, 'w')
+    file_path = "./internet_text_output/"+file_name
+
     idxs = np.argsort(metric)[::-1][:n]
 
+    file = open(file_path, 'w')
     i = 1
     for idx in idxs:
-        file.write("------->"+str(i)+": Generated sample\n")
-        file.write("\n"+text+" value= "+str(metric[idx])+"\n\n")
+        file.write("------->"+str(i)+"Metric("+text+"): "+str(metric[idx])+"\n\n\n")
         file.write(generated_samples_unique[idx])
         file.write("\n\n")
         i += 1

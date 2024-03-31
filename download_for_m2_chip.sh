@@ -1,3 +1,0 @@
-wget "https://data.commoncrawl.org/crawl-data/CC-MAIN-2017-30/segments/1500549423183.57/wet/CC-MAIN-20170720121902-20170720141902-00000.warc.wet.gz"
-gzip -d CC-MAIN-20170720121902-20170720141902-00000.warc.wet.gz
-mv CC-MAIN-20170720121902-20170720141902-00000.warc.wet.gz cc.warc.wet
