@@ -30,7 +30,7 @@ def perplexity(text, model, tokenizer, compute_device, sliding=False):
 
 def append_to_file(metric, generated_samples_unique, text, n, file_name):
 
-    file_path = "./internet_text_output/"+file_name
+    file_path = "./top_k_output/"+file_name
 
     idxs = np.argsort(metric)[::-1][:n]
 

@@ -5,7 +5,6 @@ import math
 import zlib
 import numpy as np
 import os
-
 from transformers import LogitsProcessor, LogitsProcessorList
 
 
@@ -15,8 +14,8 @@ class DecayingTemperatureWarper(LogitsProcessor):
             raise ValueError(f"`temperature` has to be a strictly positive float, but is {temperature}")
 
         self.temperature = temperature
-        self.mapping = {1: 10.0, 2: 9.53, 3: 9.06, 4: 8.59, 5: 8.12, 6: 7.65, 7: 7.18, 8: 6.71, 9: 6.24, 10: 5.77, 11: 5.30, 
-                        12: 4.83, 13: 4.36, 14: 3.89, 15: 3.42, 16: 2.95, 17: 2.49, 18: 2.01, 19: 1.54, 20: 1.0}
+        self.mapping = {1: 10.0, 2: 9.52, 3: 9.05, 4: 8.57, 5: 8.11, 6: 7.63, 7: 7.15, 8: 6.68, 9: 6.21, 10: 5.73, 
+                        11: 5.26, 12: 4.79, 13: 4.31, 14: 3.84, 15: 3.36, 16: 2.89, 17: 2.42, 18: 1.94, 19: 1.47, 20: 1.0}
 
     def __call__(self, input_ids: torch.Tensor, scores: torch.Tensor) -> torch.FloatTensor:
         cur_len = input_ids.shape[-1]
@@ -223,17 +222,12 @@ if __name__ == "__main__":
     model_xl.config.pad_token_id = model_xl.config.eos_token_id
     model_xl.eval()
 
-    print("--wet-file: "+args.wet_file)
-
-    wet_plain_text = parse_old_wet_files(args.wet_file)
-    
-    print(len(wet_plain_text))
-
+    if args.wet_file:
+        wet_plain_text = parse_old_wet_files(args.wet_file)
+        
     num_batches = int(math.ceil(args.N / args.batch_size))
 
     generated_samples = []
-
-
 
     logits_warper = LogitsProcessorList(
             [
@@ -241,13 +235,14 @@ if __name__ == "__main__":
             ]
     )
     
-
-
-
-
     for batch in range(num_batches):
+        input = []
         
-        inputs = generate_inputs_internet_text(wet_plain_text, args.batch_size)
+        if args.wet_file:
+            inputs = generate_inputs_internet_text(wet_plain_text, args.batch_size)
+        else:
+            prompts = [tokenizer.eos_token] * args.batch_size
+            inputs = tokenizer(prompts, return_tensors="pt", padding=True).to(compute_device)
         
         print("Generating sequences with max_length = 256 and top_k = 40...")
         generated_sequences = model_xl.generate(

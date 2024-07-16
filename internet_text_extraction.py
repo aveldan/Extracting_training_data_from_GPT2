@@ -123,7 +123,7 @@ def parse_wet_files(file):
     
     return plain_text
 
-
+# Older common crawl files had a slightly different structure.
 def parse_old_wet_files(file):
 
     with open(file) as f:
