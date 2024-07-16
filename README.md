@@ -4,7 +4,7 @@ Performing the experiment as per the [paper](https://arxiv.org/abs/2012.07805)
 
 The objective of the attack is to extract memorized training data from the GPT-2 XL model by leveraging overfitting. Overfitting is when an ML model provides results exceptionally accurate on the training data but poorly on new, unseen data. There are some proven attacks like the membership inference attacks that use this overfitting to successfully extract the training data from the model. The paper improves the available attack by introducing a few more metrics to filter out the unlikely samples, please read the paper for more detailed understanding.
 
-I was able to extract a few samples that were verbatim found on internet. My results: 
+I was able to extract a few samples that were verbatim found on internet. [My results](#results-from-my-experiment)
 
 ## Table of content
 
