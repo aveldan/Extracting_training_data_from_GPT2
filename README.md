@@ -76,17 +76,18 @@ With the above attacks in mind I generated 1000 samples each of length 256 token
 
 See the below table describing all the results from different methods.
 
+![Table 1](https://github.com/aveldan/Extracting_training_data_from_GPT2/blob/main/images/img1.png)
 #### The memorised content description
 
 The generated memorised content was also very different in the different methods. The memorised content found in the top-n method was usually of high k value in k-eidetic memorization, but only one example where the k value was smaller. The internet text as a prompt method on the other had created a lot more examples with smaller k and also this method memorised a few URLs verbatim that are correctly resolving.
 
-Please see the below image showing change in perplexity values in different method
+Please see [fig.4](#fig4) showing change in perplexity values in different method
 
 #### The metric values in different method
 
 Not only did the internet text as a prompt method generate more memorised content, it also created more samples with good metrics. That is the value of perplexity for most of the generated samples was low compared to the top-n method.
 
-Please see the below images which compares these metrics.
+Please see [fig.1](#fig1), [fig.2](#fig2) and [fig.3](#fig3) which compares these metrics.
 
 
 #### Some other things to note
@@ -96,3 +97,18 @@ I found that with the increase of the prompt length the number of memorised cont
 I also found the increasing the sample length with more number of tokens did not give longer memorised contents, most of the memorization was in the staring of the sample.
 
 ## I will soon include interesting examples of the memorised samples
+
+
+
+
+#### fig.1
+![img3.png](https://github.com/aveldan/Extracting_training_data_from_GPT2/blob/main/images/img3.png)
+
+#### fig.2
+![img4.png](https://github.com/aveldan/Extracting_training_data_from_GPT2/blob/main/images/img4.png)
+
+#### fig.3
+![img5.png](https://github.com/aveldan/Extracting_training_data_from_GPT2/blob/main/images/img5.png)
+
+#### fig.4
+![img2.png](https://github.com/aveldan/Extracting_training_data_from_GPT2/blob/main/images/img2.png)
